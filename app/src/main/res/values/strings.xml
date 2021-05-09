@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ComicViewer</string>
+    <string name="comic">Historietas web de romance, sarcasmo, matemáticas y lenguaje.</string>
+    <string name="view">Ver comic</string>
+    <string name="favs">Favoritos</string>
+    <string name="info">Información</string>
+</resources>
