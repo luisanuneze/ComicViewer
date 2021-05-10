@@ -36,7 +36,7 @@
 
         <action
             android:id="@+id/action_main_screen_to_info"
-            app:destination="@id/infokhcd"
+            app:destination="@id/infoxkcd"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right"
             app:enterAnim="@anim/slide_in_right"
@@ -52,10 +52,10 @@
     </fragment>
 
     <fragment
-        android:id="@+id/infokhcd"
-        android:name="ni.edu.uca.moviles2.comicviewer.ui.fragments.InfoKHCD"
-        android:label="fragment_info_khcd"
-        tools:layout="@layout/fragment_info_khcd">
+        android:id="@+id/infoxkcd"
+        android:name="ni.edu.uca.moviles2.comicviewer.ui.fragments.InfoXKCD"
+        android:label="fragment_info_xkcd"
+        tools:layout="@layout/fragment_info_xkcd">
     </fragment>
 
 </navigation>

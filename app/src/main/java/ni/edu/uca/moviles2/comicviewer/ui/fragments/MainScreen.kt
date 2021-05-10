@@ -19,11 +19,12 @@ class MainScreen : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main_screen, container, false)
 
-
+        //Navegación a la pantalla de favoritos
         view.findViewById<Button>(R.id.favs_btn).setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_main_screen_to_favorites)
         }
 
+        //Navegación a la pantalla de información
         view.findViewById<Button>(R.id.info_btn).setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_main_screen_to_info)
         }
