@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,8 +51,8 @@ class ViewComicLocal : Fragment(R.layout.fragment_view_comic_local)  {
 
         binding.comicCard.fabAdd.setOnClickListener {
             viewModel.delete(comicEntity)
-            Snackbar.make(it,resources.getString(R.string.deleted) , Snackbar.LENGTH_LONG).show()
-            Navigation.findNavController(it).navigate(R.id.action_view_comic_local_to_main_screen)
+            Toast.makeText(requireActivity(),resources.getString(R.string.deleted), Toast.LENGTH_SHORT).show()
+            Navigation.findNavController(it).navigate(R.id.action_view_comic_local_to_favorites)
         }
 
         binding.comicCard.fabList.setOnClickListener {

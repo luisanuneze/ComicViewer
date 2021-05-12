@@ -2,6 +2,7 @@ package ni.edu.uca.moviles2.comicviewer.ui
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -40,19 +41,16 @@ class Favorites : Fragment() {
         viewModel.allComics.observe(viewLifecycleOwner) { comics ->
             // Actualizar la copia cached de los comics en el adapter.
             comics.let { this.comicsAdapter.submitList(it) }
+            if(comics.size==0) {
+                Snackbar.make(view, resources.getString(R.string.emptyList), Snackbar.LENGTH_SHORT)
+                    .show()
+            }
         }
 
 
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if(recyclerView.adapter?.itemCount==0) {
-            Snackbar.make(view, resources.getString(R.string.emptyList), Snackbar.LENGTH_LONG)
-                .show()
-        }
-    }
 
     //enable options menu in this fragment
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,7 +67,7 @@ class Favorites : Fragment() {
         return (when(item.itemId) {
             R.id.action_delete -> {
                 viewModel.deleteAll()
-                Snackbar.make(requireView() ,resources.getString(R.string.deletedAll) , Snackbar.LENGTH_LONG).show()
+                Toast.makeText(requireActivity(),resources.getString(R.string.deletedAll), Toast.LENGTH_SHORT).show()
                 true
             }
             R.id.action_nav_home -> {
