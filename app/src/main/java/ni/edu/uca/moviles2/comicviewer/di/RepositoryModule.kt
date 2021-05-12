@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import ni.edu.uca.moviles2.comicviewer.db.dao.ComicDao
 import ni.edu.uca.moviles2.comicviewer.repository.ComicRepository
+import ni.edu.uca.moviles2.comicviewer.retrofit.ComicRetrofit
 import javax.inject.Singleton
 
 //Inyección de dependencias repositorio
@@ -16,7 +17,7 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideCatRepository(
-        comicDao: ComicDao,
+        comicDao: ComicDao
     ): ComicRepository {
         return ComicRepository(comicDao)
     }

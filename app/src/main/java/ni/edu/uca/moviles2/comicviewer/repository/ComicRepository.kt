@@ -9,11 +9,14 @@ import ni.edu.uca.moviles2.comicviewer.db.entity.ComicEntity
     Repositorio provee acceso a multiples fuentes de datos
     Declara el DAO como propiedad private en el constructor
  */
-class ComicRepository(private val comicDao: ComicDao)  {
+class ComicRepository(private val comicDao: ComicDao,
+
+)  {
 
     // Room ejecuta todos los queries en hilos separados.
     // Flow will notifica al observer cuando los datos cambian.
     val allComics: Flow<List<ComicEntity>> = comicDao.getComics()
+
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread

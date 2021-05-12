@@ -70,5 +70,14 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
 
+    //Picasso para imagenes
+    implementation "com.squareup.picasso:picasso:2.71828"
+
+    //Retrofit
+    def retrofit = "2.9.0"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+
+
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
 }

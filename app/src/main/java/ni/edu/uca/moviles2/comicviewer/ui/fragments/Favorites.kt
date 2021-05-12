@@ -11,9 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ni.edu.uca.moviles2.comicviewer.R
 import ni.edu.uca.moviles2.comicviewer.adapters.ComicListAdapter
-import ni.edu.uca.moviles2.comicviewer.db.entity.ComicEntity
 import ni.edu.uca.moviles2.comicviewer.viewmodel.ComicViewModel
-import java.util.*
 import javax.inject.Inject
 
 @ExperimentalCoroutinesApi

@@ -19,6 +19,11 @@ class MainScreen : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_main_screen, container, false)
 
+        //Navegación a la pantalla de ver comic
+        view.findViewById<Button>(R.id.view_btn).setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_main_screen_to_view_comic)
+        }
+
         //Navegación a la pantalla de favoritos
         view.findViewById<Button>(R.id.favs_btn).setOnClickListener {
             Navigation.findNavController(view).navigate(R.id.action_main_screen_to_favorites)
@@ -31,4 +36,5 @@ class MainScreen : Fragment() {
 
         return view
     }
+
 }
