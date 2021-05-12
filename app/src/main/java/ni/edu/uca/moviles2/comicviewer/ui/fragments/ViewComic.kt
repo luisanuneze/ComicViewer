@@ -38,7 +38,8 @@ class ViewComic : Fragment()  {
     private val viewModel: ComicViewModel by viewModels()
     private val  comicNetworkMapper: ComicNetworkMapper = ComicNetworkMapper()
 
-    lateinit var comicFromNetwork : ComicNetworkEntity
+    private lateinit var comicFromNetwork : ComicNetworkEntity
+    private var ultNum:Int = 0
 
     private lateinit var progressBar:ProgressBar
     private lateinit var ivComicView:ImageView
@@ -58,33 +59,35 @@ class ViewComic : Fragment()  {
         val view = inflater.inflate(R.layout.fragment_view_comic, container, false)
 
         //los views en el layout
-        ivComicView = view.findViewById<ImageView>(R.id.ivComic)
-        titleView = view.findViewById<TextView>(R.id.comic_title)
-        errorMsgView = view.findViewById<TextView>(R.id.errorMsg)
-        numView = view.findViewById<TextView>(R.id.tvNumCont)
-        progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
-        view2View = view.findViewById<View>(R.id.view2)
-        comicCard = view.findViewById<View>(R.id.comicCard)
+        ivComicView = view.findViewById(R.id.ivComic)
+        titleView = view.findViewById(R.id.comic_title)
+        errorMsgView = view.findViewById(R.id.errorMsg)
+        numView = view.findViewById(R.id.tvNumCont)
+        progressBar = view.findViewById(R.id.progressBar)
+        view2View = view.findViewById(R.id.view2)
+        comicCard = view.findViewById(R.id.comicCard)
 
 
-        view.findViewById<FloatingActionButton>(R.id.fabOther).setOnClickListener { view ->
+        view.findViewById<FloatingActionButton>(R.id.fabOther).setOnClickListener {
             //Pone la vista  cargando
             onlyShowProgressBar()
-            //busca nuevo comic
-            searchComic("/614/info.0.json")
+            //busca nuevo comic generando aleatorio entre 1 y el ultimo
+            var query = rand(ultNum).toString() + "/info.0.json"
+            searchComic(query)
         }
 
-        view.findViewById<FloatingActionButton>(R.id.fabAdd).setOnClickListener { view ->
+        view.findViewById<FloatingActionButton>(R.id.fabAdd).setOnClickListener {
             //Crea un nuevo ComicEntity usando el mapper
             val comicFavorite = this.comicNetworkMapper.mapFromEntity(comicFromNetwork)
-            //Actualiza la fecha para insertar en la base de datos
+            //Actualiza el id y la fecha para insertar en la base de datos
+            comicFavorite.id = comicFavorite.num
             comicFavorite.dateAdded = Date().time
             //inserta en la base de datos
             viewModel.insert(comicFavorite)
             Snackbar.make(view,requireActivity().resources.getString(R.string.added) , Snackbar.LENGTH_LONG).show()
         }
 
-        view.findViewById<FloatingActionButton>(R.id.fabList).setOnClickListener { view ->
+        view.findViewById<FloatingActionButton>(R.id.fabList).setOnClickListener {
             //Se mueve a la lista de favorit0s
             Navigation.findNavController(view).navigate(R.id.action_view_comic_to_favorites)
         }
@@ -94,7 +97,7 @@ class ViewComic : Fragment()  {
         onlyShowProgressBar()
 
         //Inicializa el comic en blanco
-        comicFromNetwork= ComicNetworkEntity(0,"","","","","","",0,0,0,0)
+        comicFromNetwork= ComicNetworkEntity("","","","","","",0,0,0,0)
 
 
         //Busca el comic del día
@@ -125,11 +128,14 @@ class ViewComic : Fragment()  {
 
     private fun searchComic(query: String) {
         CoroutineScope(Dispatchers.IO).launch {
-            val call = getRetrofit().create(ComicRetrofit::class.java).getCurrentComic("$query").execute()
+            val call = getRetrofit().create(ComicRetrofit::class.java).getCurrentComic(query).execute()
             comicFromNetwork = call.body() as ComicNetworkEntity
             requireActivity().runOnUiThread {
                 if (comicFromNetwork.title != "") {
                     showComic(comicFromNetwork)
+                    if(query == "info.0.json"){
+                        ultNum=comicFromNetwork.num
+                    }
                 } else {
                     onlyShowError()
                 }
@@ -179,6 +185,11 @@ class ViewComic : Fragment()  {
         errorMsgView.visibility = View.VISIBLE
         comicCard.visibility = View.INVISIBLE
         Toast.makeText(requireActivity(),requireActivity().resources.getString(R.string.error), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun rand(end: Int): Int {
+        require(1 <= end) { "Illegal Argument" }
+        return (1..end).random()
     }
 
 }

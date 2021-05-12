@@ -4,8 +4,6 @@ import com.google.gson.annotations.SerializedName
 
 
 class ComicNetworkEntity (
-    @SerializedName("id")
-    var id: Int,
     @SerializedName("title")
     var title: String,
     @SerializedName("img")

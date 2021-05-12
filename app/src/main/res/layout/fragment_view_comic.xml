@@ -19,23 +19,23 @@
 
     <ImageView
         android:id="@+id/ivComic"
-        android:layout_width="320dp"
+        android:layout_width="match_parent"
         android:layout_height="320dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/ic_launcher_foreground"
+        android:contentDescription="@string/comic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/purple_frame"
-        tools:src="@drawable/purple_frame"
-        android:contentDescription="@string/comic" />
+        tools:src="@drawable/purple_frame" />
 
     <View
         android:id="@+id/view2"
         android:layout_width="0dp"
-        android:layout_height="320dp"
+        android:layout_height="350dp"
         android:layout_marginTop="64dp"
         android:background="@drawable/rounded_rect"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -47,7 +47,7 @@
     <TextView
         android:id="@+id/comic_title"
         android:layout_width="0dp"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"

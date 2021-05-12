@@ -9,7 +9,7 @@ class ComicNetworkMapper
 constructor(): EntityMapper<ComicNetworkEntity, ComicEntity> {
     override fun mapFromEntity(entity: ComicNetworkEntity): ComicEntity {
         return ComicEntity(
-            id = entity.id,
+            id = 0,
             title = entity.title,
             img = entity.img,
             alt = entity.alt,
@@ -26,7 +26,6 @@ constructor(): EntityMapper<ComicNetworkEntity, ComicEntity> {
 
     override fun mapToEntity(domainModel: ComicEntity): ComicNetworkEntity {
         return ComicNetworkEntity(
-            id = domainModel.id,
             title = domainModel.title,
             img = domainModel.img,
             alt = domainModel.alt,
