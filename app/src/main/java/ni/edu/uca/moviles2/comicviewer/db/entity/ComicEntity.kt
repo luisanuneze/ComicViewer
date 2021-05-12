@@ -1,8 +1,10 @@
 package ni.edu.uca.moviles2.comicviewer.db.entity
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 /*
     Clase "data class" que describe la entidad que respresenta la tabla en SQLite.
@@ -10,7 +12,9 @@ import androidx.room.PrimaryKey
     Room usa estas propiedades para crear la tabla e instanciar objetos a partir de los registros en la base de datos
     @Entity(tableName = "comics") Nombre de la tabla es "comics"
     @PrimaryKey(autoGenerate = false) Nombre de la clave primaria es "id"
+    Parcelable para poder enviarla como argumento en bundle
 */
+@Parcelize
 @Entity(tableName =  "comics")
 data class ComicEntity (
     @PrimaryKey(autoGenerate = false)
@@ -38,4 +42,4 @@ data class ComicEntity (
     var year: Int,
     @ColumnInfo(name = "date_added")
     var dateAdded: Long
-)
+) : Parcelable

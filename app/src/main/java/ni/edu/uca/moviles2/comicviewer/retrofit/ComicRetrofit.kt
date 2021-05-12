@@ -7,6 +7,4 @@ import retrofit2.http.Url
 interface ComicRetrofit {
     @GET
     fun getCurrentComic(@Url url:String): Call<ComicNetworkEntity>
-    @GET
-    fun getOtherComic(@Url url:String): Call<ComicNetworkEntity>
 }

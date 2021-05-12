@@ -73,6 +73,24 @@
         android:name="ni.edu.uca.moviles2.comicviewer.ui.Favorites"
         android:label="fragment_favorites"
         tools:layout="@layout/fragment_favorites">
+
+        <action
+            android:id="@+id/action_favorites_to_main_screen"
+            app:destination="@id/title_screen"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+
+        <action
+            android:id="@+id/action_favorites_to_view_local"
+            app:destination="@id/view_comic_local"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+
+
     </fragment>
 
     <fragment
@@ -80,6 +98,13 @@
         android:name="ni.edu.uca.moviles2.comicviewer.ui.fragments.InfoXKCD"
         android:label="fragment_info_xkcd"
         tools:layout="@layout/fragment_info_xkcd">
+    </fragment>
+
+    <fragment
+        android:id="@+id/view_comic_local"
+        android:name="ni.edu.uca.moviles2.comicviewer.ui.fragments.ViewComicLocal"
+        android:label="fragment_info_xkcd"
+        tools:layout="@layout/fragment_view_comic_local">
     </fragment>
 
 

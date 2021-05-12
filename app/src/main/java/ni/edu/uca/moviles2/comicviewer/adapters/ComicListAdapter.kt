@@ -4,6 +4,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +24,13 @@ class ComicListAdapter() : ListAdapter<ComicEntity, ComicListAdapter.ComicViewHo
     override fun onBindViewHolder(holder: ComicViewHolder, position: Int) {
         val current = getItem(position)
         holder.bind(current.title,current.num,current.dateAdded)
+        holder.itemView.setOnClickListener {
+            val bundle = bundleOf("comic" to current)
+
+            Navigation.findNavController(holder.itemView).navigate(
+                R.id.action_favorites_to_view_local,
+                bundle)
+        }
     }
 
     class ComicViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

@@ -1,18 +1,13 @@
 package ni.edu.uca.moviles2.comicviewer.ui.fragments
 
-import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
@@ -21,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ni.edu.uca.moviles2.comicviewer.R
+import ni.edu.uca.moviles2.comicviewer.databinding.FragmentViewComicBinding
 import ni.edu.uca.moviles2.comicviewer.retrofit.ComicNetworkEntity
 import ni.edu.uca.moviles2.comicviewer.retrofit.ComicNetworkMapper
 import ni.edu.uca.moviles2.comicviewer.retrofit.ComicRetrofit
@@ -33,42 +29,27 @@ import java.util.*
 //Fragment para presentar ver comic
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class ViewComic : Fragment()  {
+class ViewComic : Fragment(R.layout.fragment_view_comic) {
 
     private val viewModel: ComicViewModel by viewModels()
-    private val  comicNetworkMapper: ComicNetworkMapper = ComicNetworkMapper()
+    private val comicNetworkMapper: ComicNetworkMapper = ComicNetworkMapper()
 
-    private lateinit var comicFromNetwork : ComicNetworkEntity
-    private var ultNum:Int = 0
 
-    private lateinit var progressBar:ProgressBar
-    private lateinit var ivComicView:ImageView
-    private lateinit var view2View:View
-    private lateinit var titleView:TextView
-    private lateinit var comicCard:View
+    private lateinit var comicFromNetwork: ComicNetworkEntity
+    private var ultNum: Int = 0
 
-    private lateinit var errorMsgView:TextView
-
-    private lateinit var numView:TextView
+    private var _binding: FragmentViewComicBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Layout para este fragment
-        val view = inflater.inflate(R.layout.fragment_view_comic, container, false)
-
-        //los views en el layout
-        ivComicView = view.findViewById(R.id.ivComic)
-        titleView = view.findViewById(R.id.comic_title)
-        errorMsgView = view.findViewById(R.id.errorMsg)
-        numView = view.findViewById(R.id.tvNumCont)
-        progressBar = view.findViewById(R.id.progressBar)
-        view2View = view.findViewById(R.id.view2)
-        comicCard = view.findViewById(R.id.comicCard)
+        _binding = FragmentViewComicBinding.inflate(inflater, container, false)
 
 
-        view.findViewById<FloatingActionButton>(R.id.fabOther).setOnClickListener {
+        binding.comicCard.fabOther.setOnClickListener {
             //Pone la vista  cargando
             onlyShowProgressBar()
             //busca nuevo comic generando aleatorio entre 1 y el ultimo
@@ -76,7 +57,8 @@ class ViewComic : Fragment()  {
             searchComic(query)
         }
 
-        view.findViewById<FloatingActionButton>(R.id.fabAdd).setOnClickListener {
+
+        binding.comicCard.fabAdd.setOnClickListener {
             //Crea un nuevo ComicEntity usando el mapper
             val comicFavorite = this.comicNetworkMapper.mapFromEntity(comicFromNetwork)
             //Actualiza el id y la fecha para insertar en la base de datos
@@ -84,14 +66,13 @@ class ViewComic : Fragment()  {
             comicFavorite.dateAdded = Date().time
             //inserta en la base de datos
             viewModel.insert(comicFavorite)
-            Snackbar.make(view,requireActivity().resources.getString(R.string.added) , Snackbar.LENGTH_LONG).show()
+            view?.let { it -> Snackbar.make(it,requireActivity().resources.getString(R.string.added) , Snackbar.LENGTH_LONG).show() }
         }
 
-        view.findViewById<FloatingActionButton>(R.id.fabList).setOnClickListener {
+        binding.comicCard.fabList.setOnClickListener {
             //Se mueve a la lista de favorit0s
-            Navigation.findNavController(view).navigate(R.id.action_view_comic_to_favorites)
+            view?.let { it -> Navigation.findNavController(it).navigate(R.id.action_view_comic_to_favorites) }
         }
-
 
         //Inicializar la vista con el progress bar hasta que carga el comic
         onlyShowProgressBar()
@@ -102,23 +83,16 @@ class ViewComic : Fragment()  {
 
         //Busca el comic del día
         searchComic("info.0.json")
-        return view
+
+        return binding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        if (requireActivity() != null) {
-            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
-    override fun onPause() {
-        super.onPause()
-        if (requireActivity() != null) {
-            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
-        }
-    }
-
+    //Retrofit Builder
     private fun getRetrofit(): Retrofit {
         return Retrofit.Builder()
             .baseUrl("https://xkcd.com/")
@@ -143,49 +117,48 @@ class ViewComic : Fragment()  {
         }
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        view.findViewById<TextView>(R.id.comic_title).text = comicFromNetwork.title
+    private fun onlyShowProgressBar() {
+        binding.progressBar.visibility = View.VISIBLE
+        binding.ivComic.visibility = View.INVISIBLE
+        binding.view2.visibility = View.INVISIBLE
+        binding.comicTitle.visibility = View.INVISIBLE
+        binding.errorMsg.visibility = View.INVISIBLE
+        binding.root.findViewById<View>(R.id.comicCard).visibility = View.INVISIBLE
     }
 
     private fun showComic(comic:ComicNetworkEntity) {
-        titleView.text=comic.title
-        numView.text=comic.num.toString()
+        binding.comicTitle.text=comic.title
+        binding.comicCard.tvNumCont .text=comic.num.toString()
+        binding.comicCard.tvAltCont.text= comic.alt
+        binding.comicCard.tvDiaCont.text=comic.day.toString()
+        binding.comicCard.tvMesCont.text= comic.month.toString()
+        binding.comicCard.tvAnioCont.text=comic.year.toString()
         Picasso.get()
             .load(comic.img)
-            .into(ivComicView)
+            .into(binding.ivComic)
         showResults()
 
     }
 
-    private fun onlyShowProgressBar() {
-        progressBar.visibility = View.VISIBLE
-        ivComicView.visibility = View.INVISIBLE
-        view2View.visibility = View.INVISIBLE
-        titleView.visibility = View.INVISIBLE
-        errorMsgView.visibility = View.INVISIBLE
-        comicCard.visibility = View.INVISIBLE
-    }
-
     private fun showResults() {
-        progressBar.visibility = View.INVISIBLE
-        ivComicView.visibility = View.VISIBLE
-        view2View.visibility = View.VISIBLE
-        titleView.visibility = View.VISIBLE
-        errorMsgView.visibility = View.INVISIBLE
-        comicCard.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.INVISIBLE
+        binding.ivComic.visibility = View.VISIBLE
+        binding.view2.visibility = View.VISIBLE
+        binding.comicTitle.visibility = View.VISIBLE
+        binding.errorMsg.visibility = View.INVISIBLE
+        binding.root.findViewById<View>(R.id.comicCard).visibility = View.VISIBLE
     }
 
     private fun onlyShowError() {
-        progressBar.visibility = View.INVISIBLE
-        ivComicView.visibility = View.INVISIBLE
-        view2View.visibility = View.INVISIBLE
-        titleView.visibility = View.INVISIBLE
-        errorMsgView.visibility = View.VISIBLE
-        comicCard.visibility = View.INVISIBLE
+        binding.progressBar.visibility = View.INVISIBLE
+        binding.ivComic.visibility = View.INVISIBLE
+        binding.view2.visibility = View.INVISIBLE
+        binding.comicTitle.visibility = View.INVISIBLE
+        binding.errorMsg.visibility = View.VISIBLE
+        binding.root.findViewById<View>(R.id.comicCard).visibility = View.INVISIBLE
         Toast.makeText(requireActivity(),requireActivity().resources.getString(R.string.error), Toast.LENGTH_SHORT).show()
     }
+
 
     private fun rand(end: Int): Int {
         require(1 <= end) { "Illegal Argument" }

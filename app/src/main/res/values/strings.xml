@@ -5,11 +5,19 @@
     <string name="favs">Favoritos</string>
     <string name="info">Información</string>
     <string name="num">Número</string>
+    <string name="alt">Descripción</string>
+    <string name="month">Mes</string>
+    <string name="day">Día</string>
+    <string name="year">Año</string>
     <string name="dateAdded">Agregado el </string>
     <string name="title">Título</string>
     <string name="error">Ha ocurrido un error!</string>
     <string name="networkerror">Error de red!</string>
     <string name="added">Comic agregado a favoritos!</string>
+    <string name="delete">Borrar</string>
+    <string name="deleteAll">Borrar todos</string>
+
+    <string name="home">Inicio</string>
 
 
 

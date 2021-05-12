@@ -1,11 +1,10 @@
 package ni.edu.uca.moviles2.comicviewer.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,6 +41,32 @@ class Favorites : Fragment() {
             comics.let { this.comicsAdapter.submitList(it) }
         }
         return view
+    }
+
+    //enable options menu in this fragment
+    override fun onCreate(savedInstanceState: Bundle?) {
+        setHasOptionsMenu(true)
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_favoritos, menu);
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return (when(item.itemId) {
+            R.id.action_delete -> {
+                viewModel.deleteAll()
+                true
+            }
+            R.id.action_nav_home -> {
+                Navigation.findNavController(requireView()).navigate(R.id.action_favorites_to_main_screen)
+                true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        })
     }
 
 }
