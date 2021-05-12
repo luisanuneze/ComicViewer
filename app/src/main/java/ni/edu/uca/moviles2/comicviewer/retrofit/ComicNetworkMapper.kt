@@ -6,7 +6,6 @@ import java.util.*
 import javax.inject.Inject
 
 class ComicNetworkMapper
-@Inject
 constructor(): EntityMapper<ComicNetworkEntity, ComicEntity> {
     override fun mapFromEntity(entity: ComicNetworkEntity): ComicEntity {
         return ComicEntity(

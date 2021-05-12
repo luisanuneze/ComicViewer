@@ -37,5 +37,5 @@ data class ComicEntity (
     @ColumnInfo(name = "year")
     var year: Int,
     @ColumnInfo(name = "date_added")
-    val dateAdded: Long
+    var dateAdded: Long
 )

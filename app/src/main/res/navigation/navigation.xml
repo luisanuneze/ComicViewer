@@ -57,6 +57,15 @@
         android:name="ni.edu.uca.moviles2.comicviewer.ui.fragments.ViewComic"
         android:label="fragment_view_comic"
         tools:layout="@layout/fragment_view_comic">
+
+        <action
+            android:id="@+id/action_view_comic_to_favorites"
+            app:destination="@id/favorites"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"/>
+
     </fragment>
 
     <fragment

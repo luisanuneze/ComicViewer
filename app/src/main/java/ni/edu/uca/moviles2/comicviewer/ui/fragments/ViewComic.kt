@@ -1,5 +1,6 @@
 package ni.edu.uca.moviles2.comicviewer.ui.fragments
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,22 +11,32 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.Navigation
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import ni.edu.uca.moviles2.comicviewer.R
 import ni.edu.uca.moviles2.comicviewer.retrofit.ComicNetworkEntity
+import ni.edu.uca.moviles2.comicviewer.retrofit.ComicNetworkMapper
 import ni.edu.uca.moviles2.comicviewer.retrofit.ComicRetrofit
 import ni.edu.uca.moviles2.comicviewer.viewmodel.ComicViewModel
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.*
 
 
 //Fragment para presentar ver comic
+@ExperimentalCoroutinesApi
+@AndroidEntryPoint
 class ViewComic : Fragment()  {
 
     private val viewModel: ComicViewModel by viewModels()
+    private val  comicNetworkMapper: ComicNetworkMapper = ComicNetworkMapper()
 
     lateinit var comicFromNetwork : ComicNetworkEntity
 
@@ -45,6 +56,8 @@ class ViewComic : Fragment()  {
     ): View? {
         // Layout para este fragment
         val view = inflater.inflate(R.layout.fragment_view_comic, container, false)
+
+        //los views en el layout
         ivComicView = view.findViewById<ImageView>(R.id.ivComic)
         titleView = view.findViewById<TextView>(R.id.comic_title)
         errorMsgView = view.findViewById<TextView>(R.id.errorMsg)
@@ -52,10 +65,55 @@ class ViewComic : Fragment()  {
         progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
         view2View = view.findViewById<View>(R.id.view2)
         comicCard = view.findViewById<View>(R.id.comicCard)
+
+
+        view.findViewById<FloatingActionButton>(R.id.fabOther).setOnClickListener { view ->
+            //Pone la vista  cargando
+            onlyShowProgressBar()
+            //busca nuevo comic
+            searchComic("/614/info.0.json")
+        }
+
+        view.findViewById<FloatingActionButton>(R.id.fabAdd).setOnClickListener { view ->
+            //Crea un nuevo ComicEntity usando el mapper
+            val comicFavorite = this.comicNetworkMapper.mapFromEntity(comicFromNetwork)
+            //Actualiza la fecha para insertar en la base de datos
+            comicFavorite.dateAdded = Date().time
+            //inserta en la base de datos
+            viewModel.insert(comicFavorite)
+            Snackbar.make(view,requireActivity().resources.getString(R.string.added) , Snackbar.LENGTH_LONG).show()
+        }
+
+        view.findViewById<FloatingActionButton>(R.id.fabList).setOnClickListener { view ->
+            //Se mueve a la lista de favorit0s
+            Navigation.findNavController(view).navigate(R.id.action_view_comic_to_favorites)
+        }
+
+
+        //Inicializar la vista con el progress bar hasta que carga el comic
         onlyShowProgressBar()
+
+        //Inicializa el comic en blanco
         comicFromNetwork= ComicNetworkEntity(0,"","","","","","",0,0,0,0)
-        searchComic("2459/info.0.json")
+
+
+        //Busca el comic del día
+        searchComic("info.0.json")
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (requireActivity() != null) {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if (requireActivity() != null) {
+            requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR
+        }
     }
 
     private fun getRetrofit(): Retrofit {
@@ -83,11 +141,6 @@ class ViewComic : Fragment()  {
         super.onViewCreated(view, savedInstanceState)
 
         view.findViewById<TextView>(R.id.comic_title).text = comicFromNetwork.title
-    }
-
-    private fun showErrorDialog() {
-        Toast.makeText(requireActivity(), "Ha ocurrido un error", Toast.LENGTH_SHORT).show()
-
     }
 
     private fun showComic(comic:ComicNetworkEntity) {
