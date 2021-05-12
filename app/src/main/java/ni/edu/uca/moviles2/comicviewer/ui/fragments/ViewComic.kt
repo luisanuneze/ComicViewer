@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
@@ -66,12 +65,12 @@ class ViewComic : Fragment(R.layout.fragment_view_comic) {
             comicFavorite.dateAdded = Date().time
             //inserta en la base de datos
             viewModel.insert(comicFavorite)
-            view?.let { it -> Snackbar.make(it,requireActivity().resources.getString(R.string.added) , Snackbar.LENGTH_LONG).show() }
+            Snackbar.make(it,resources.getString(R.string.added) , Snackbar.LENGTH_LONG).show()
         }
 
         binding.comicCard.fabList.setOnClickListener {
             //Se mueve a la lista de favorit0s
-            view?.let { it -> Navigation.findNavController(it).navigate(R.id.action_view_comic_to_favorites) }
+            Navigation.findNavController(it).navigate(R.id.action_view_comic_to_favorites)
         }
 
         //Inicializar la vista con el progress bar hasta que carga el comic
@@ -156,7 +155,7 @@ class ViewComic : Fragment(R.layout.fragment_view_comic) {
         binding.comicTitle.visibility = View.INVISIBLE
         binding.errorMsg.visibility = View.VISIBLE
         binding.root.findViewById<View>(R.id.comicCard).visibility = View.INVISIBLE
-        Toast.makeText(requireActivity(),requireActivity().resources.getString(R.string.error), Toast.LENGTH_SHORT).show()
+        Snackbar.make(binding.root,resources.getString(R.string.deletedAll) , Snackbar.LENGTH_LONG).show()
     }
 
 

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import ni.edu.uca.moviles2.comicviewer.R
@@ -40,7 +41,17 @@ class Favorites : Fragment() {
             // Actualizar la copia cached de los comics en el adapter.
             comics.let { this.comicsAdapter.submitList(it) }
         }
+
+
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if(recyclerView.adapter?.itemCount==0) {
+            Snackbar.make(view, resources.getString(R.string.emptyList), Snackbar.LENGTH_LONG)
+                .show()
+        }
     }
 
     //enable options menu in this fragment
@@ -58,6 +69,7 @@ class Favorites : Fragment() {
         return (when(item.itemId) {
             R.id.action_delete -> {
                 viewModel.deleteAll()
+                Snackbar.make(requireView() ,resources.getString(R.string.deletedAll) , Snackbar.LENGTH_LONG).show()
                 true
             }
             R.id.action_nav_home -> {

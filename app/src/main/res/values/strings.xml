@@ -18,6 +18,9 @@
     <string name="deleteAll">Borrar todos</string>
 
     <string name="home">Inicio</string>
+    <string name="deleted">Registro eliminado!</string>
+    <string name="deletedAll">Todos los registros fueron eliminados!</string>
+    <string name="emptyList">La lista está vacía!</string>
 
 
 
